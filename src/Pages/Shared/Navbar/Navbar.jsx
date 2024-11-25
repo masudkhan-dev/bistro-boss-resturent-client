@@ -16,6 +16,8 @@ const Navbar = () => {
     { id: 3, name: "Dashboard", path: "/dashboard" },
     { id: 4, name: "Our Menu", path: "/menu" },
     { id: 5, name: "Order Food", path: "/order/salad" },
+    { id: 6, name: "Login", path: "/login" },
+    { id: 7, name: "Sign Up", path: "/signup" },
   ];
 
   const variants = {
