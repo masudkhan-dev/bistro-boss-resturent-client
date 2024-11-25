@@ -11,14 +11,15 @@ import c2 from "../../../assets/home/slide2.jpg";
 import c3 from "../../../assets/home/slide3.jpg";
 import c4 from "../../../assets/home/slide4.jpg";
 import c5 from "../../../assets/home/slide5.jpg";
+import SectionTitle from "../../../components/SectionTitle/SectionTitle";
 
 const Category = () => {
   const data = [
-    { id: 1, src: c1, alt: "category 1", title: "Salad" },
-    { id: 2, src: c2, alt: "category 2", title: "Shoups" },
-    { id: 3, src: c3, alt: "category 3", title: "Pizzas" },
-    { id: 4, src: c4, alt: "category 4", title: "desserts" },
-    { id: 5, src: c5, alt: "category 5", title: "Salad" },
+    { id: 1, src: c1, alt: "category ", title: "Salad" },
+    { id: 2, src: c2, alt: "category ", title: "Shoups" },
+    { id: 3, src: c3, alt: "category ", title: "Pizzas" },
+    { id: 4, src: c4, alt: "category ", title: "desserts" },
+    { id: 5, src: c5, alt: "category ", title: "Salad" },
   ];
 
   const variants = {
@@ -27,24 +28,12 @@ const Category = () => {
   };
 
   return (
-    <div className="my-10 ">
+    <section className="my-10 ">
       <div className="text-center mb-10">
-        <motion.p
-          whileHover={variants.hover}
-          whileTap={variants.tap}
-          className="text-[#D99904] italic mb-5 text-base w-fit mx-auto"
-        >
-          ---From 11:00am to 10:00pm---
-        </motion.p>
-        <div className=" border-y border-[#E8E8E8] w-1/4 mx-auto"></div>
-        <motion.h2
-          whileHover={variants.hover}
-          whileTap={variants.tap}
-          className="text-4xl font-bold text-black/70 my-3 w-fit mx-auto"
-        >
-          ORDER ONLINE
-        </motion.h2>
-        <div className=" border-y border-[#E8E8E8] w-1/4 mx-auto"></div>
+        <SectionTitle
+          subHeading={"From 11:00am to 10:00pm"}
+          heading={" ORDER ONLINE"}
+        />
       </div>
 
       <div className="ml-[10%] md:ml-0">
@@ -76,9 +65,9 @@ const Category = () => {
           modules={[Autoplay]}
           className="mySwiper "
         >
-          {data.map((item) => (
-            <div key={item.id}>
-              <SwiperSlide className="">
+          {data.map((item, index) => (
+            <div key={index}>
+              <SwiperSlide>
                 <motion.img
                   src={item.src}
                   alt={item.alt}
@@ -98,7 +87,7 @@ const Category = () => {
           ))}
         </Swiper>
       </div>
-    </div>
+    </section>
   );
 };
 

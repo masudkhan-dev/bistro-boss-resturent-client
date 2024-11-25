@@ -15,7 +15,7 @@ const Navbar = () => {
     { id: 2, name: "Contact Us", path: "/contact" },
     { id: 3, name: "Dashboard", path: "/dashboard" },
     { id: 4, name: "Our Menu", path: "/menu" },
-    { id: 5, name: "Our Shop", path: "/shop" },
+    { id: 5, name: "Order Food", path: "/order/salad" },
   ];
 
   const variants = {
@@ -54,9 +54,9 @@ const Navbar = () => {
               }`}
             >
               <motion.div className="flex flex-col -mx-6 lg:flex-row lg:items-center lg:mx-8">
-                {navItems.map((item) => (
+                {navItems.map((item, index) => (
                   <NavLink
-                    key={item.id}
+                    key={index}
                     to={item.path}
                     className={({ isActive }) =>
                       isActive
@@ -75,14 +75,7 @@ const Navbar = () => {
                     onClick={() => setIsCart(!isCart)}
                     className="avater w-12"
                   >
-                    <motion.img
-                      src={cart}
-                      alt="add to cart"
-                      className="scale-95"
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 1.1 }}
-                      transition={{ duration: 0.5 }}
-                    />
+                    <img src={cart} alt="add to cart" className="scale-95" />
                   </button>
                   {isCart && (
                     <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 px-5 py-2 shadow">

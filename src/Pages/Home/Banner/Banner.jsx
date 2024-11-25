@@ -1,6 +1,10 @@
 import { motion } from "framer-motion";
-import { Carousel } from "react-responsive-carousel";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 import b1 from "../../../assets/home/01.jpg";
 import b2 from "../../../assets/home/02.jpg";
@@ -11,29 +15,44 @@ import b6 from "../../../assets/home/06.png";
 
 const Banner = () => {
   const data = [
-    { id: 1, src: b1, alt: "banner 1" },
-    { id: 2, src: b2, alt: "banner 2" },
-    { id: 3, src: b3, alt: "banner 3" },
-    { id: 4, src: b4, alt: "banner 4" },
-    { id: 5, src: b5, alt: "banner 5" },
-    { id: 6, src: b6, alt: "banner 6" },
+    { id: 1, src: b1, alt: "banner " },
+    { id: 2, src: b2, alt: "banner " },
+    { id: 3, src: b3, alt: "banner " },
+    { id: 4, src: b4, alt: "banner " },
+    { id: 5, src: b5, alt: "banner " },
+    { id: 6, src: b6, alt: "banner " },
   ];
 
   return (
-    <Carousel autoPlay infiniteLoop className="mt-16">
-      {data.map((item) => (
-          <div key={item.id}>
-          <motion.img
-            src={item.src}
-            alt={item.alt}
-            className="rounded"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          />
+    <Swiper
+      spaceBetween={30}
+      centeredSlides={true}
+      autoplay={{
+        delay: 2500,
+        disableOnInteraction: false,
+      }}
+      pagination={{
+        clickable: true,
+      }}
+      navigation={true}
+      modules={[Autoplay, Pagination, Navigation]}
+      className="mySwiper mt-20"
+    >
+      {data.map((item, index) => (
+        <div key={index}>
+          <SwiperSlide>
+            <motion.img
+              src={item.src}
+              alt={item.alt}
+              className="rounded"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+            />
+          </SwiperSlide>
         </div>
       ))}
-    </Carousel>
+    </Swiper>
   );
 };
 
