@@ -60,7 +60,7 @@ const Testimonials = () => {
 
                     <FaQuoteRight className="text-5xl" />
 
-                    <p className="text-base">{item.recipe}</p>
+                    <p className="text-base">{item.details}</p>
                     <h2 className="text-3xl font-bold text-[#CD9003]">
                       {item.name}
                     </h2>

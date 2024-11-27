@@ -1,90 +1,157 @@
-import { useEffect, useState } from "react";
-import {
-  FaEye,
-  FaEyeSlash,
-  FaEnvelope,
-  FaLock,
-  FaFacebookF,
-  FaGoogle,
-  FaGithub,
-  FaUser,
-} from "react-icons/fa";
-import { Link } from "react-router-dom";
-import bg from "../../assets/others/authentication.png";
-import bg2 from "../../assets/others/authentication2.png";
+import { useState } from "react";
+import { FaEye, FaEyeSlash, FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
+import { useForm } from "react-hook-form";
+import { Helmet } from "react-helmet-async";
+import Loader from "../../Utility/Loader/Loader";
+import bg from "../../assets/others/authentication.png";
+import bg2 from "../../assets/others/authentication2.png";
+import { Image } from "lucide-react";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const { createUserEmail } = useAuth();
+  const { createUserEmail, loading, updateUserProfileEmail } = useAuth();
 
-  const handleSignUp = (e) => {
-    e.preventDefault();
-    console.log(email, password);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm();
 
-    createUserEmail(email, password)
-      .then((result) => {
-        const user = result.user;
-        toast.success("SignUp Successfully!");
-        console.log(user);
+  const onSubmit = (data) => {
+    createUserEmail(data.email, data.password)
+      .then(() => {
+        updateUserProfileEmail(data.name, data.photoURL)
+          .then(() => {
+            toast.success("Sign Up Successful!");
+            reset();
+            navigate("/");
+          })
+          .catch((error) => {
+            toast.error(error.message);
+          });
       })
       .catch((error) => {
         toast.error(error.message);
-        console.error(error.message);
       });
+    console.log(data);
   };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div
-      className="min-h-screen  bg-cover bg-center flex items-center justify-center  hero-overlay bg-opacity-60"
+      className="min-h-screen bg-cover bg-center flex items-center justify-center"
       style={{ backgroundImage: `url(${bg})` }}
     >
-      <div className="bg-transparent rounded-xl overflow-hidden flex flex-col md:flex-row items-center ">
-        {/* Login Form Section */}
+      <Helmet>
+        <title>SignUp | Bistro Boss</title>
+      </Helmet>
+      <div className="bg-transparent rounded-xl overflow-hidden flex flex-col md:flex-row items-center">
         <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold text-gray-800 mb-2">
               Create an Account
             </h1>
           </div>
-
-          <form onSubmit={handleSignUp} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FaUser className="text-gray-400" />
               </div>
               <input
                 type="text"
-                onChange={(e) => setEmail(e.target.value)}
-                className={`w-full pl-10 pr-4 py-3 rounded-lg border  focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                placeholder="Name"
+                {...register("name", {
+                  required: "Name is required",
+                  minLength: {
+                    value: 2,
+                    message: "Name must be at least 2 characters",
+                  },
+                  maxLength: {
+                    value: 80,
+                    message: "Name cannot exceed 80 characters",
+                  },
+                })}
+                className={`w-full pl-10 pr-12 py-3 rounded-lg border ${
+                  errors.name ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                placeholder="Full Name"
               />
+              {errors.name && (
+                <span className="text-red-500 text-sm">
+                  {errors.name.message}
+                </span>
+              )}
             </div>
 
+            {/* Email Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FaEnvelope className="text-gray-400" />
               </div>
               <input
                 type="email"
-                onChange={(e) => setEmail(e.target.value)}
-                className={`w-full pl-10 pr-4 py-3 rounded-lg border  focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                {...register("email", {
+                  required: "Email is required",
+                })}
+                className={`w-full pl-10 pr-12 py-3 rounded-lg border ${
+                  errors.email ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 placeholder="Email address"
               />
+              {errors.email && (
+                <span className="text-red-500 text-sm">
+                  {errors.email.message}
+                </span>
+              )}
             </div>
 
+            {/* Photo URL Input */}
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Image className="text-gray-400" />
+              </div>
+              <input
+                type="text"
+                {...register("photoURL", {
+                  required: "Profile photo URL is required",
+                })}
+                className={`w-full pl-10 pr-12 py-3 rounded-lg border ${
+                  errors.photoURL ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                placeholder="Profile Photo URL"
+              />
+              {errors.photoURL && (
+                <span className="text-red-500 text-sm">
+                  {errors.photoURL.message}
+                </span>
+              )}
+            </div>
+
+            {/* Password Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FaLock className="text-gray-400" />
               </div>
               <input
                 type={showPassword ? "text" : "password"}
-                onChange={(e) => setPassword(e.target.value)}
-                className={`w-full pl-10 pr-12 py-3 rounded-lg border  focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters",
+                  },
+                })}
+                className={`w-full pl-10 pr-12 py-3 rounded-lg border ${
+                  errors.password ? "border-red-500" : "border-gray-300"
+                } focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 placeholder="Password"
               />
               <button
@@ -94,15 +161,28 @@ const SignUp = () => {
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </button>
+              {errors.password && (
+                <span className="text-red-500 text-sm block mt-1">
+                  {errors.password.message}
+                </span>
+              )}
             </div>
 
-            <input
+            {/* Submit Button */}
+            <button
               type="submit"
-              value="SignUp"
-              className="w-full bg-[#D1A054] btn text-white hover:bg-[#D1A054]/90 rounded"
-            />
+              disabled={loading}
+              className={`w-full btn text-white rounded ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[#D1A054] hover:bg-[#D1A054]/90"
+              }`}
+            >
+              {loading ? "Creating Account..." : "Sign Up"}
+            </button>
           </form>
 
+          {/* Login Link */}
           <div className="text-center my-2">
             <p className="text-gray-600">
               Already have an account?{" "}
@@ -113,26 +193,18 @@ const SignUp = () => {
                 Login
               </Link>
             </p>
-            <div className="flex items-center justify-center gap-4 mt-2">
-              <p className="text-gray-600">Or </p>
-              <button className="bg-blue-500 text-white p-2 rounded-full">
-                <FaFacebookF />
-              </button>
-              <button className="bg-red-500 text-white p-2 rounded-full">
-                <FaGoogle />
-              </button>
-              <button className="bg-black text-white p-2 rounded-full">
-                <FaGithub />
-              </button>
-            </div>
           </div>
         </div>
 
         <div className="md:w-1/2">
-          <img src={bg2} alt="Login background" className="w-full " />
-          <Toaster position="top-center" reverseOrder={true} />
+          <Link to="/">
+            <img src={bg2} alt="Sign Up background" className="w-full" />
+          </Link>
         </div>
       </div>
+
+      {/* Ensure Toaster is placed here */}
+      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };

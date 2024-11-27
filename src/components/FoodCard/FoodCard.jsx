@@ -1,12 +1,68 @@
 import { motion } from "framer-motion";
 import ButtonOutline from "../Button/ButtonOutline";
+import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
+import { useLocation, useNavigate } from "react-router-dom";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const FoodCard = ({ item }) => {
-  const { image, name, recipe, price } = item;
+  const { image, name, recipe, price, _id } = item;
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const axiosSecure = useAxiosSecure();
 
   const variants = {
     hover: { scale: 1.1, transition: { duration: 0.2 } },
     tap: { scale: 0.5, transition: { duration: 0.2 } },
+  };
+
+  const handleAddtoCart = (food) => {
+    if (user && user.email) {
+      console.log(user.email, food);
+
+      const cartItems = {
+        menuId: _id,
+        name,
+        recipe,
+        image,
+        price,
+      };
+
+      axiosSecure
+        .post("/carts", cartItems)
+        .then((res) => {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: `${name} successfully added in cart`,
+            showConfirmButton: false,
+            timer: 1200,
+          });
+        })
+        .catch((error) => {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: error.message,
+            footer: error.code,
+          });
+        });
+    } else {
+      Swal.fire({
+        title: "You are not logged In!",
+        text: "Do you want to Login?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes Login",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/login", { state: { from: location } });
+        }
+      });
+    }
   };
 
   return (
@@ -41,7 +97,9 @@ const FoodCard = ({ item }) => {
             {recipe}
           </motion.p>
 
-          <ButtonOutline>Add to Cart</ButtonOutline>
+          <span onClick={() => handleAddtoCart(item)}>
+            <ButtonOutline>Add to Cart</ButtonOutline>
+          </span>
         </div>
       </article>
     </div>

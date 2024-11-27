@@ -1,14 +1,20 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { IoMdClose, IoMdMenu } from "react-icons/io";
-import { Link, NavLink } from "react-router-dom";
-
-import cart from "../../../assets/icon/cart.png";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import useAuth from "../../../hooks/useAuth";
+import Loader from "../../../Utility/Loader/Loader";
+import toast, { Toaster } from "react-hot-toast";
+import { ShoppingCart } from "lucide-react";
+import useCart from "../../../hooks/useCart";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAvater, setIsAvater] = useState(false);
   const [isCart, setIsCart] = useState(false);
+  const { user, loading, logOutEmail } = useAuth();
+  const navigate = useNavigate();
+  const { data, refetch } = useCart();
 
   const navItems = [
     { id: 1, name: "Home", path: "/" },
@@ -16,14 +22,30 @@ const Navbar = () => {
     { id: 3, name: "Dashboard", path: "/dashboard" },
     { id: 4, name: "Our Menu", path: "/menu" },
     { id: 5, name: "Order Food", path: "/order/salad" },
-    { id: 6, name: "Login", path: "/login" },
-    { id: 7, name: "Sign Up", path: "/signup" },
+    { id: 6, name: "Sign Up", path: "/signup" },
   ];
 
   const variants = {
     hover: { scale: 1.1, transition: { duration: 0.2 } },
     tap: { scale: 0.9, transition: { duration: 0.2 } },
   };
+
+  const handleLogout = () => {
+    logOutEmail()
+      .then(() => {
+        toast.success("Logout Successfully");
+        navigate("/");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+
+  refetch();
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 bg-white/95 duration-700">
@@ -75,9 +97,10 @@ const Navbar = () => {
                 <div className="md:dropdown md:dropdown-end">
                   <button
                     onClick={() => setIsCart(!isCart)}
-                    className="avater w-12"
+                    className="avater w-24 flex items-center scale-95"
                   >
-                    <img src={cart} alt="add to cart" className="scale-95" />
+                    <ShoppingCart />
+                    <div className="badge badge-info">+ {data.length}</div>
                   </button>
                   {isCart && (
                     <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 px-5 py-2 shadow">
@@ -89,42 +112,54 @@ const Navbar = () => {
                     </ul>
                   )}
                 </div>
-                <div className="md:dropdown md:dropdown-end">
-                  <button
-                    onClick={() => setIsAvater(!isAvater)}
-                    className="btn btn-ghost btn-circle avatar"
-                  >
-                    <div className="w-10 rounded-full">
-                      <img
-                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                        alt="Tailwind CSS Navbar component"
-                      />
-                    </div>
-                  </button>
-                  {isAvater && (
-                    <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-                      <li>
-                        <Link>Welcome, Mr. Tom</Link>
-                      </li>
-                      <li>
-                        <Link className="justify-between">
-                          Profile
-                          <span className="badge">New</span>
-                        </Link>
-                      </li>
-                      <li>
-                        <Link>Settings</Link>
-                      </li>
+                {user ? (
+                  <div className="md:dropdown md:dropdown-end">
+                    <button
+                      onClick={() => setIsAvater(!isAvater)}
+                      className="btn btn-ghost btn-circle avatar"
+                    >
+                      <div className="w-10 rounded-full">
+                        <img src={user?.photoURL} alt="user dp" />
+                      </div>
+                    </button>
+                    {isAvater && (
+                      <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
+                        <li>
+                          <Link className="text-sm">Welcome, {user?.name}</Link>
+                        </li>
+                        <li>
+                          <Link className="text-sm">Email: {user?.email}</Link>
+                        </li>
+                        <li>
+                          <Link className="justify-between">
+                            Profile
+                            <span className="badge">New</span>
+                          </Link>
+                        </li>
+                        <li>
+                          <Link>Settings</Link>
+                        </li>
 
-                      <button className="btn btn-error">Logout</button>
-                    </ul>
-                  )}
-                </div>
+                        <button
+                          onClick={handleLogout}
+                          className="btn btn-error"
+                        >
+                          Logout
+                        </button>
+                      </ul>
+                    )}
+                  </div>
+                ) : (
+                  <Link to="/login" className="btn btn-warning">
+                    Login
+                  </Link>
+                )}
               </div>
             </div>
           </div>
         </div>
       </nav>
+      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 };

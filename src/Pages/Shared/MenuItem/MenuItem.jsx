@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import Alert from "../../../Utility/Alert/Alert";
 
 const MenuItem = ({ item }) => {
   const { image, name, price, recipe } = item;
@@ -6,6 +7,32 @@ const MenuItem = ({ item }) => {
   const variants = {
     hover: { scale: 1.1, transition: { duration: 0.2 } },
     tap: { scale: 0.9, transition: { duration: 0.2 } },
+  };
+
+  const handlePrice = () => {
+    // Alert.fire({
+    // type: "delete",
+    // title: "Delete Item?",
+    // text: "Are you sure you want to delete this?",
+    // onConfirm: () => console.log("Item Deleted"),
+    // onCancel: () => console.log("Deletion Cancelled"),
+    // });
+    //
+    // Alert.fire({
+    // type: "success",
+    // title: "Operation Successful",
+    // text: "Your action was completed"
+    // });
+
+    //
+
+    //
+    Alert.fire({
+      type: "error",
+      title: "Error Occurred",
+      text: "Something went wrong",
+    });
+    //
   };
 
   return (
@@ -42,6 +69,7 @@ const MenuItem = ({ item }) => {
 
           <div className="sm:flex sm:items-end sm:justify-end">
             <motion.button
+              onClick={handlePrice}
               whileHover={variants.hover}
               whileTap={variants.tap}
               whileDrag={{ scale: 0.9, rotate: 10 }}
