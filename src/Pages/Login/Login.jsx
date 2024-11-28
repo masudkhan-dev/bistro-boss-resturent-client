@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   FaEye,
@@ -16,22 +16,10 @@ import bg2 from "../../assets/others/authentication2.png";
 import useAuth from "../../hooks/useAuth";
 import Alert from "../../Utility/Alert/Alert";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
-
-// Captcha utility function
-const generateCaptcha = (length = 6) => {
-  const characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let captcha = "";
-  for (let i = 0; i < length; i++) {
-    captcha += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return captcha;
-};
+import Captcha from "../../Utility/Captcha/Captcha";
 
 const Login = () => {
-  // State management
   const [showPassword, setShowPassword] = useState(false);
-  const [captcha, setCaptcha] = useState("");
   const [isVerified, setIsVerified] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -39,37 +27,12 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    setValue,
-    watch,
     reset,
     formState: { errors, isValid },
   } = useForm();
 
   const axiosPublic = useAxiosPublic();
-
-  const captchaInput = watch("captchaInput");
   const from = location.state?.from?.pathname || "/";
-
-  useEffect(() => {
-    setCaptcha(generateCaptcha());
-  }, []);
-
-  const handleCaptchaValidation = () => {
-    if (captchaInput.toLowerCase() === captcha.toLowerCase()) {
-      setIsVerified(true);
-      toast.success("CAPTCHA verified successfully!");
-    } else {
-      setIsVerified(false);
-      setValue("captchaInput", "");
-      toast.error("Incorrect CAPTCHA. Please try again.");
-    }
-  };
-
-  const handleRefreshCaptcha = () => {
-    setCaptcha(generateCaptcha());
-    setValue("captchaInput", "");
-    setIsVerified(false);
-  };
 
   const onSubmit = (data) => {
     if (!isVerified) {
@@ -191,50 +154,10 @@ const Login = () => {
               )}
             </div>
 
-            {/* CAPTCHA Display */}
-            <div className="w-full pl-10 pr-4 py-4 rounded-lg border bg-white font-bold text-center tracking-widest">
-              <div className="flex items-center justify-between gap-2">
-                {captcha}
-                <button
-                  type="button"
-                  onClick={handleRefreshCaptcha}
-                  className="btn btn-outline btn-sm"
-                >
-                  Refresh
-                </button>
-              </div>
-            </div>
-
-            {/* CAPTCHA Input and Validation */}
-            <div className="flex items-center gap-2">
-              <div className="relative flex-grow">
-                <input
-                  type="text"
-                  {...register("captchaInput", {
-                    required: "CAPTCHA is required",
-                    maxLength: {
-                      value: 6,
-                      message: "CAPTCHA cannot exceed 6 characters",
-                    },
-                  })}
-                  className="w-full pl-10 pr-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="Enter CAPTCHA"
-                />
-              </div>
-
-              <button
-                type="button"
-                onClick={handleCaptchaValidation}
-                className="btn btn-outline hover:bg-[#D1A054] hover:text-white"
-              >
-                Verify
-              </button>
-            </div>
-            {errors.captchaInput && (
-              <p className="text-red-500 text-sm text-center">
-                {errors.captchaInput.message}
-              </p>
-            )}
+            {/* Reusable CAPTCHA Component */}
+            <Captcha
+              onVerify={(verified) => setIsVerified(verified)} 
+            />
 
             {/* Login Submit Button */}
             <input
