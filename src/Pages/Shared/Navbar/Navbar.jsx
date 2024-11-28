@@ -19,11 +19,11 @@ const Navbar = () => {
   const navItems = [
     { id: 1, name: "Home", path: "/" },
     { id: 2, name: "Contact Us", path: "/contact" },
-    { id: 3, name: "Dashboard", path: "/dashboard" },
+    user && { id: 3, name: "Dashboard", path: "/dashboard" },
     { id: 4, name: "Our Menu", path: "/menu" },
     { id: 5, name: "Order Food", path: "/order/salad" },
     { id: 6, name: "Sign Up", path: "/signup" },
-  ];
+  ].filter(Boolean);
 
   const variants = {
     hover: { scale: 1.1, transition: { duration: 0.2 } },
@@ -40,9 +40,6 @@ const Navbar = () => {
         toast.error(error.message);
       });
   };
-
-
-
 
   if (loading) {
     return <Loader />;
@@ -113,10 +110,16 @@ const Navbar = () => {
 
                       <p className="text-lg font-bold my-2">
                         Price: ${" "}
-                        {user ? cart?.reduce((sum, p) => sum + p.price, 0) : 0}
+                        {user
+                          ? cart
+                              ?.reduce((sum, p) => sum + p.price, 0)
+                              .toFixed(2)
+                          : 0}
                       </p>
 
-                      <Link className="btn btn-warning">View Cart</Link>
+                      <Link to="/dashboard/cart" className="btn btn-warning">
+                        View Cart
+                      </Link>
                     </ul>
                   )}
                 </div>
@@ -133,12 +136,14 @@ const Navbar = () => {
                     {isAvater && (
                       <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                         <li>
-                          <Link className="text-sm">Welcome, {user?.name}</Link>
+                          <Link className="text-sm">
+                            Welcome, {user?.displayName}
+                          </Link>
                         </li>
                         <li>
                           <Link className="text-sm">Email: {user?.email}</Link>
                         </li>
-                        <li>
+                        {/* <li>
                           <Link className="justify-between">
                             Profile
                             <span className="badge">New</span>
@@ -146,11 +151,11 @@ const Navbar = () => {
                         </li>
                         <li>
                           <Link>Settings</Link>
-                        </li>
+                        </li> */}
 
                         <button
                           onClick={handleLogout}
-                          className="btn btn-error"
+                          className="btn btn-error mt-5"
                         >
                           Logout
                         </button>

@@ -21,6 +21,7 @@ const FoodCard = ({ item }) => {
 
   const handleAddtoCart = (food) => {
     if (user && user.email) {
+      const userEmail = user.email;
       console.log(user.email, food);
 
       const cartItems = {
@@ -29,17 +30,18 @@ const FoodCard = ({ item }) => {
         recipe,
         image,
         price,
+        userEmail,
       };
 
       axiosSecure
-        .post(`/carts?email=${user?.email}`, cartItems)
+        .post(`/carts`, cartItems)
         .then(() => {
           Alert.fire({
             type: "success",
             title: `${name} successfully added in cart`,
             text: `$ ${price}`,
           });
-          refetch()
+          refetch();
         })
         .catch((error) => {
           Alert.fire({

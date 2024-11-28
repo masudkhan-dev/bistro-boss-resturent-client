@@ -11,10 +11,11 @@ import {
 } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-
 import bg from "../../assets/others/authentication.png";
 import bg2 from "../../assets/others/authentication2.png";
 import useAuth from "../../hooks/useAuth";
+import Alert from "../../Utility/Alert/Alert";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 // Captcha utility function
 const generateCaptcha = (length = 6) => {
@@ -34,7 +35,7 @@ const Login = () => {
   const [isVerified, setIsVerified] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const { loginUserEmail } = useAuth();
+  const { loginUserEmail, googleSignIn } = useAuth();
   const {
     register,
     handleSubmit,
@@ -43,10 +44,11 @@ const Login = () => {
     reset,
     formState: { errors, isValid },
   } = useForm();
-  const captchaInput = watch("captchaInput");
 
+  const axiosPublic = useAxiosPublic();
+
+  const captchaInput = watch("captchaInput");
   const from = location.state?.from?.pathname || "/";
-  console.log(from);
 
   useEffect(() => {
     setCaptcha(generateCaptcha());
@@ -87,6 +89,33 @@ const Login = () => {
         toast.error(error.message);
         console.error(error.message);
         navigate("/");
+      });
+  };
+
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then((result) => {
+        const userInfo = {
+          email: result.user?.email,
+          name: result.user?.displayName,
+        };
+
+        axiosPublic.post("/users", userInfo).then((res) => {
+          console.log(res.data);
+          Alert.fire({
+            type: "success",
+            title: "Login Successful",
+            text: "Your account loggedin by Google",
+          });
+          navigate("/");
+        });
+      })
+      .catch((error) => {
+        Alert.fire({
+          type: "error",
+          title: error.message,
+          text: error.code,
+        });
       });
   };
 
@@ -236,7 +265,10 @@ const Login = () => {
               <button className="bg-blue-500 text-white p-2 rounded-full">
                 <FaFacebookF />
               </button>
-              <button className="bg-red-500 text-white p-2 rounded-full">
+              <button
+                onClick={handleGoogleSignIn}
+                className="bg-red-500 text-white p-2 rounded-full"
+              >
                 <FaGoogle />
               </button>
               <button className="bg-black text-white p-2 rounded-full">

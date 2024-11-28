@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { FaEye, FaEyeSlash, FaEnvelope, FaLock, FaUser } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaEnvelope,
+  FaLock,
+  FaUser,
+  FaFacebookF,
+  FaGoogle,
+  FaGithub,
+} from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
@@ -9,12 +18,15 @@ import Loader from "../../Utility/Loader/Loader";
 import bg from "../../assets/others/authentication.png";
 import bg2 from "../../assets/others/authentication2.png";
 import { Image } from "lucide-react";
+import Alert from "../../Utility/Alert/Alert";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  const { createUserEmail, loading, updateUserProfileEmail } = useAuth();
+  const { createUserEmail, loading, updateUserProfileEmail, googleSignIn } =
+    useAuth();
 
   const {
     register,
@@ -22,15 +34,29 @@ const SignUp = () => {
     reset,
     formState: { errors },
   } = useForm();
+  const axiosPublic = useAxiosPublic();
 
   const onSubmit = (data) => {
     createUserEmail(data.email, data.password)
       .then(() => {
         updateUserProfileEmail(data.name, data.photoURL)
           .then(() => {
-            toast.success("Sign Up Successful!");
-            reset();
-            navigate("/");
+            const userInfo = {
+              name: data.name,
+              email: data.email,
+            };
+
+            axiosPublic.post("/users", userInfo).then((res) => {
+              if (res.data.insertedId) {
+                Alert.fire({
+                  type: "success",
+                  title: "You are Successfully SignUp",
+                  text: "Your registration was completed",
+                });
+                reset();
+                navigate("/");
+              }
+            });
           })
           .catch((error) => {
             toast.error(error.message);
@@ -45,6 +71,33 @@ const SignUp = () => {
   if (loading) {
     return <Loader />;
   }
+
+  const handleGoogleSignUp = () => {
+    googleSignIn()
+      .then((result) => {
+        const userInfo = {
+          email: result.user?.email,
+          name: result.user?.displayName,
+        };
+        console.log(result.user);
+        axiosPublic.post("/users", userInfo).then((res) => {
+          console.log(res.data);
+          Alert.fire({
+            type: "success",
+            title: "Login Successful",
+            text: "Your account loggedin by Google",
+          });
+          navigate("/");
+        });
+      })
+      .catch((error) => {
+        Alert.fire({
+          type: "error",
+          title: error.message,
+          text: error.code,
+        });
+      });
+  };
 
   return (
     <div
@@ -180,6 +233,21 @@ const SignUp = () => {
             >
               {loading ? "Creating Account..." : "Sign Up"}
             </button>
+            <div className="flex items-center justify-center gap-4 mt-2">
+              <p className="text-gray-600">Or </p>
+              <button className="bg-blue-500 text-white p-2 rounded-full">
+                <FaFacebookF />
+              </button>
+              <button
+                onClick={handleGoogleSignUp}
+                className="bg-red-500 text-white p-2 rounded-full"
+              >
+                <FaGoogle />
+              </button>
+              <button className="bg-black text-white p-2 rounded-full">
+                <FaGithub />
+              </button>
+            </div>
           </form>
 
           {/* Login Link */}
