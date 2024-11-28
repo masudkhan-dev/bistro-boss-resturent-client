@@ -11,11 +11,13 @@ const MenuItem = ({ item }) => {
 
   const handlePrice = () => {
     // Alert.fire({
-    // type: "delete",
-    // title: "Delete Item?",
-    // text: "Are you sure you want to delete this?",
-    // onConfirm: () => console.log("Item Deleted"),
-    // onCancel: () => console.log("Deletion Cancelled"),
+    //   type: "delete",
+    //   title: "Delete Item?",
+    //   text: "Are you sure you want to delete this?",
+    //   confirmButtonText: "Yes Delete",
+    //   cancelButtonText: "Keep Item",
+    //   onConfirm: () => console.log("Item Deleted"),
+    //   onCancel: () => console.log("Deletion Cancelled"),
     // });
     //
     // Alert.fire({
@@ -32,6 +34,9 @@ const MenuItem = ({ item }) => {
       title: "Error Occurred",
       text: "Something went wrong",
     });
+    //
+    //
+    //
     //
   };
 

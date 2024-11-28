@@ -1,9 +1,10 @@
 import { motion } from "framer-motion";
 import ButtonOutline from "../Button/ButtonOutline";
 import useAuth from "../../hooks/useAuth";
-import Swal from "sweetalert2";
 import { useLocation, useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import Alert from "../../Utility/Alert/Alert";
+import useCart from "../../hooks/useCart";
 
 const FoodCard = ({ item }) => {
   const { image, name, recipe, price, _id } = item;
@@ -11,6 +12,7 @@ const FoodCard = ({ item }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const axiosSecure = useAxiosSecure();
+  const [, refetch] = useCart();
 
   const variants = {
     hover: { scale: 1.1, transition: { duration: 0.2 } },
@@ -30,37 +32,33 @@ const FoodCard = ({ item }) => {
       };
 
       axiosSecure
-        .post("/carts", cartItems)
-        .then((res) => {
-          Swal.fire({
-            position: "center",
-            icon: "success",
+        .post(`/carts?email=${user?.email}`, cartItems)
+        .then(() => {
+          Alert.fire({
+            type: "success",
             title: `${name} successfully added in cart`,
-            showConfirmButton: false,
-            timer: 1200,
+            text: `$ ${price}`,
           });
+          refetch()
         })
         .catch((error) => {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: error.message,
-            footer: error.code,
+          Alert.fire({
+            type: "error",
+            title: error.message,
+            text: error.code,
           });
         });
     } else {
-      Swal.fire({
+      Alert.fire({
+        type: "delete",
         title: "You are not logged In!",
         text: "Do you want to Login?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
         confirmButtonText: "Yes Login",
-      }).then((result) => {
-        if (result.isConfirmed) {
+        cancelButtonText: "No",
+        onConfirm: () => {
           navigate("/login", { state: { from: location } });
-        }
+        },
+        onCancel: () => console.log("Login Cancelled"),
       });
     }
   };
@@ -97,7 +95,7 @@ const FoodCard = ({ item }) => {
             {recipe}
           </motion.p>
 
-          <span onClick={() => handleAddtoCart(item)}>
+          <span onClick={handleAddtoCart}>
             <ButtonOutline>Add to Cart</ButtonOutline>
           </span>
         </div>

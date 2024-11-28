@@ -14,7 +14,7 @@ const Navbar = () => {
   const [isCart, setIsCart] = useState(false);
   const { user, loading, logOutEmail } = useAuth();
   const navigate = useNavigate();
-  const { data, refetch } = useCart();
+  const [cart] = useCart();
 
   const navItems = [
     { id: 1, name: "Home", path: "/" },
@@ -41,7 +41,8 @@ const Navbar = () => {
       });
   };
 
-  refetch();
+
+
 
   if (loading) {
     return <Loader />;
@@ -100,13 +101,20 @@ const Navbar = () => {
                     className="avater w-24 flex items-center scale-95"
                   >
                     <ShoppingCart />
-                    <div className="badge badge-info">+ {data.length}</div>
+                    <div className="badge badge-info">
+                      + {user ? cart?.length : 0}
+                    </div>
                   </button>
                   {isCart && (
                     <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 px-5 py-2 shadow">
-                      <p className="text-lg font-bold">8 Items</p>
+                      <p className="text-lg font-bold">
+                        {user ? cart?.length : 0} Items
+                      </p>
 
-                      <p className="text-lg font-bold my-2">Price: $999</p>
+                      <p className="text-lg font-bold my-2">
+                        Price: ${" "}
+                        {user ? cart?.reduce((sum, p) => sum + p.price, 0) : 0}
+                      </p>
 
                       <Link className="btn btn-warning">View Cart</Link>
                     </ul>
