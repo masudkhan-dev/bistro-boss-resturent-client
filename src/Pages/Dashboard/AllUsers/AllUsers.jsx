@@ -1,20 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Loader from "../../../Utility/Loader/Loader";
-import { Trash2, Users } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import Alert from "../../../Utility/Alert/Alert";
 import Error from "../../../Utility/Error/Error";
 
 const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
 
-  const {
-    data: users,
-    isLoading,
-    refetch,
-    isError,
-    error,
-  } = useQuery({
+  const { data, isLoading, refetch, isError, error } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
       const res = await axiosSecure.get("/users");
@@ -30,21 +24,21 @@ const AllUsers = () => {
     return <Error error={error} />;
   }
 
-  const handleDelete = (id) => {
+  const handleDelete = (user) => {
     axiosSecure
-      .delete(`/users/${id}`)
+      .delete(`/users/${user._id}`)
       .then((res) => {
         Alert.fire({
           type: "delete",
           title: "Delete Item?",
-          text: "Are you sure you want to delete this?",
+          text: `Are you sure you want to delete ${user.name}?`,
           confirmButtonText: "Yes Delete",
           cancelButtonText: "No Keep Him",
           onConfirm: () => {
             Alert.fire({
               type: "success",
               title: "Delete Successful",
-              text: `${users.name} was deleted`,
+              text: `${user.name} was deleted`,
             });
             refetch();
           },
@@ -60,15 +54,36 @@ const AllUsers = () => {
       });
   };
 
-  const handleRole = (id) => {
-    
+  const handleRole = (user) => {
+    axiosSecure
+      .patch(`/users/admin/${user._id}`)
+      .then((res) => {
+        if (res.data.modifiedCount > 0) {
+          Alert.fire({
+            type: "success",
+            title: `${user.name} is added to Admin`,
+            text: `Now ${user.name} is admin.`,
+          });
+          refetch();
+          console.log(user.name + " modified");
+        } else {
+          console.log(user.name + " can not modified");
+        }
+      })
+      .catch((error) => {
+        Alert.fire({
+          type: "error",
+          title: error.message,
+          text: error.code,
+        });
+      });
   };
 
   return (
     <div>
       <div className="flex justify-evenly">
         <h2 className="text-4xl">Total Users</h2>
-        <h2 className="text-4xl">All Users: {users.length}</h2>
+        <h2 className="text-4xl">All Users: {data?.length}</h2>
       </div>
       <div>
         <div className="overflow-x-auto mt-1 w-full">
@@ -84,22 +99,28 @@ const AllUsers = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user, index) => (
+              {data.map((user, index) => (
                 <tr key={user._id}>
                   <th>{index + 1}</th>
                   <td>{user.name}</td>
                   <td>{user.email}</td>
                   <td>
-                    <button
-                      onClick={() => handleRole(user._id)}
-                      className="btn btn-ghost text-green-500 text-xl"
-                    >
-                      <Users />
-                    </button>
+                    {user.role === "admin" ? (
+                      <button className="btn btn-ghost text-green-500 text-xl">
+                        Admin
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleRole(user)}
+                        className="btn btn-ghost text-green-500 text-xl"
+                      >
+                        User
+                      </button>
+                    )}
                   </td>
                   <th>
                     <button
-                      onClick={() => handleDelete(user._id)}
+                      onClick={() => handleDelete(user)}
                       className="btn btn-ghost text-red-500 text-xl"
                     >
                       <Trash2 />
