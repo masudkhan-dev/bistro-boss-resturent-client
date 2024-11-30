@@ -1,9 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import Loader from "../../../Utility/Loader/Loader";
 import { Trash2 } from "lucide-react";
 import Alert from "../../../Utility/Alert/Alert";
 import Error from "../../../Utility/Error/Error";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
@@ -11,6 +11,12 @@ const AllUsers = () => {
   const { data, isLoading, refetch, isError, error } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
+      const token = localStorage.getItem("access-token");
+
+      if (token) {
+        console.log(token);
+      }
+
       const res = await axiosSecure.get("/users");
       return res.data;
     },
@@ -100,7 +106,7 @@ const AllUsers = () => {
             </thead>
             <tbody>
               {data.map((user, index) => (
-                <tr key={user._id}>
+                <tr key={index}>
                   <th>{index + 1}</th>
                   <td>{user.name}</td>
                   <td>{user.email}</td>

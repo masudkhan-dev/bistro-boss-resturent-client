@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { motion, useAnimation } from 'framer-motion';
-import { FaPhone, FaMapMarkerAlt, FaClock } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { FaPhone, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 
 const AnimatedBackground = () => {
   const bubbleVariants = {
@@ -12,9 +12,9 @@ const AnimatedBackground = () => {
         duration: 4,
         delay: i * 0.5,
         repeat: Infinity,
-        ease: 'easeInOut'
-      }
-    })
+        ease: "easeInOut",
+      },
+    }),
   };
 
   return (
@@ -27,7 +27,7 @@ const AnimatedBackground = () => {
             width: `${Math.random() * 200 + 100}px`,
             height: `${Math.random() * 200 + 100}px`,
             left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`
+            top: `${Math.random() * 100}%`,
           }}
           variants={bubbleVariants}
           initial="initial"
@@ -48,7 +48,7 @@ const Contact = () => {
       await controls.start({
         opacity: 1,
         y: 0,
-        transition: { duration: 0.8, ease: 'easeOut' }
+        transition: { duration: 0.8, ease: "easeOut" },
       });
       setIsLoaded(true);
     };
@@ -66,36 +66,40 @@ const Contact = () => {
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
-              { 
-                icon: <FaPhone size={36} />, 
-                title: 'Phone', 
-                content: '(123) 456-7890',
-                delay: 0.1 
+              {
+                icon: <FaPhone size={36} />,
+                title: "Phone",
+                content: "(123) 456-7890",
+                delay: 0.1,
               },
-              { 
-                icon: <FaMapMarkerAlt size={36} />, 
-                title: 'Address', 
-                content: '123 Main St, Anytown USA',
-                delay: 0.2 
+              {
+                icon: <FaMapMarkerAlt size={36} />,
+                title: "Address",
+                content: "123 Main St, Anytown USA",
+                delay: 0.2,
               },
-              { 
-                icon: <FaClock size={36} />, 
-                title: 'Working Hours', 
-                content: 'Mon - Fri: 08:00 - 22:00\nSat - Sun: 10:00 - 23:00',
-                delay: 0.3 
-              }
+              {
+                icon: <FaClock size={36} />,
+                title: "Working Hours",
+                content: "Mon - Fri: 08:00 - 22:00\nSat - Sun: 10:00 - 23:00",
+                delay: 0.3,
+              },
             ].map(({ icon, title, content, delay }) => (
               <motion.div
                 key={title}
-                className="bg-white/70 p-8 rounded-2xl shadow-lg flex items-center transform hover:scale-105 transition duration-300"
+                className="bg-white/70 p-8 rounded-2xl shadow-lg justify-center items-center transform hover:scale-105 transition duration-300 flex flex-col"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isLoaded ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.5, delay, ease: 'easeOut' }}
+                transition={{ duration: 0.5, delay, ease: "easeOut" }}
               >
                 <div className="text-indigo-600 mr-6">{icon}</div>
-                <div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-800">{title}</h3>
-                  <p className="text-gray-600 text-lg whitespace-pre-line">{content}</p>
+                <div className="text-center mt-5">
+                  <h3 className="text-xl font-bold my-2 text-gray-800">
+                    {title}
+                  </h3>
+                  <p className="text-gray-600 text-lg whitespace-pre-line">
+                    {content}
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -105,18 +109,23 @@ const Contact = () => {
             className="mt-12"
             initial={{ opacity: 0, y: 50 }}
             animate={isLoaded ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4, ease: 'easeOut' }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
           >
-            <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Get in Touch</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+              Get in Touch
+            </h2>
             <form className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {['Name', 'Email'].map((label) => (
+                {["Name", "Email"].map((label) => (
                   <div key={label}>
-                    <label htmlFor={label.toLowerCase()} className="block text-gray-700 font-semibold mb-2 text-lg">
+                    <label
+                      htmlFor={label.toLowerCase()}
+                      className="block text-gray-700 font-semibold mb-2 text-lg"
+                    >
                       {label}
                     </label>
                     <input
-                      type={label === 'Email' ? 'email' : 'text'}
+                      type={label === "Email" ? "email" : "text"}
                       id={label.toLowerCase()}
                       name={label.toLowerCase()}
                       className="w-full px-5 py-3 rounded-xl border-2 border-gray-200 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition duration-200"
@@ -126,7 +135,10 @@ const Contact = () => {
                 ))}
               </div>
               <div>
-                <label htmlFor="phone" className="block text-gray-700 font-semibold mb-2 text-lg">
+                <label
+                  htmlFor="phone"
+                  className="block text-gray-700 font-semibold mb-2 text-lg"
+                >
                   Phone
                 </label>
                 <input
@@ -138,7 +150,10 @@ const Contact = () => {
                 />
               </div>
               <div>
-                <label htmlFor="message" className="block text-gray-700 font-semibold mb-2 text-lg">
+                <label
+                  htmlFor="message"
+                  className="block text-gray-700 font-semibold mb-2 text-lg"
+                >
                   Message
                 </label>
                 <textarea

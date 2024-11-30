@@ -11,8 +11,8 @@ const FoodCard = ({ item }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const axiosSecure = useAxiosSecure();
   const [, refetch] = useCart();
+  const axiosSecure = useAxiosSecure();
 
   const variants = {
     hover: { scale: 1.1, transition: { duration: 0.2 } },

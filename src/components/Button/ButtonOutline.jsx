@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const ButtonOutline = ({ children }) => {
+const ButtonOutline = ({ btn }) => {
   return (
     <div className="my-10">
       <motion.button
@@ -12,7 +12,7 @@ const ButtonOutline = ({ children }) => {
         transition={{ type: "spring", stiffness: 400, damping: 10 }}
         className="btn btn-outline border border-b-4 rounded-none shadow-xl"
       >
-        {children}
+        {btn}
       </motion.button>
     </div>
   );

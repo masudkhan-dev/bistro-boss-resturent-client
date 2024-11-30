@@ -6,8 +6,11 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const Cart = () => {
   const [cart, refetch] = useCart();
-  const totalPrice = cart.reduce((total, item) => total + item.price, 0);
   const axiosSecure = useAxiosSecure();
+
+  const totalPrice = cart
+    .reduce((total, item) => total + item.price, 0)
+    .toFixed(2);
 
   const handleDelete = (id) => {
     Alert.fire({
@@ -63,7 +66,7 @@ const Cart = () => {
           </thead>
           <tbody>
             {cart.map((item, index) => (
-              <tr key={item._id}>
+              <tr key={index}>
                 <td>{index + 1}</td>
                 <td>
                   <div className="avatar">

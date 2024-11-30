@@ -9,14 +9,14 @@ import Loader from "../../../Utility/Loader/Loader";
 import Error from "../../../Utility/Error/Error";
 import { Rating } from "@smastrom/react-rating";
 import "@smastrom/react-rating/style.css";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const Testimonials = () => {
-  const axiosSecure = useAxiosSecure();
-
+  const axiosSecure = useAxiosSecure()
+  
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["review"],
+    queryKey: ["tes tes monial"],
     queryFn: async () => {
       const res = await axiosSecure.get("/review");
       return res.data;
@@ -32,7 +32,7 @@ const Testimonials = () => {
   }
 
   return (
-    <section className="my-20">
+    <div className="my-20">
       <SectionTitle subHeading="What Our Clients Say" heading="Testimonials" />
       <div>
         <div>
@@ -71,7 +71,7 @@ const Testimonials = () => {
           </Swiper>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

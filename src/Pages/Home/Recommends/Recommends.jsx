@@ -28,8 +28,8 @@ const Recommends = () => {
     <section>
       <SectionTitle subHeading="Should Try" heading="CHEF RECOMMENDS" />
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {data?.slice(0, 3)?.map((item) => (
-          <Recommend key={item._id} item={item} />
+        {data?.slice(0, 3)?.map((item, index) => (
+          <Recommend key={index} item={item} />
         ))}
       </div>
     </section>

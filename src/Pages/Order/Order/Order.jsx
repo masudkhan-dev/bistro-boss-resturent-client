@@ -6,10 +6,10 @@ import Cover from "../../Shared/Cover/Cover";
 import Loader from "../../../Utility/Loader/Loader";
 import Error from "../../../Utility/Error/Error";
 import OrderTab from "../OrderTab/OrderTab";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import o1 from "../../../assets/order/order.jpg";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const tabStyles = `
   .custom-tabs {
@@ -94,10 +94,10 @@ const tabStyles = `
 `;
 
 const Order = () => {
-  const axiosSecure = useAxiosSecure();
   const { category } = useParams();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState(0);
+  const axiosSecure = useAxiosSecure();
 
   const categories = ["salad", "pizza", "soup", "dessert", "drinks"];
   const categoryIcons = {
@@ -169,7 +169,7 @@ const Order = () => {
           <TabList className="tab-list">
             {categories.map((cat, index) => (
               <Tab
-                key={cat}
+                key={index}
                 className={`tab-item ${activeTab === index ? "active" : ""}`}
               >
                 <span className="mr-2">{categoryIcons[cat]}</span>
@@ -180,7 +180,7 @@ const Order = () => {
 
           {categoryItems.map((items, index) => (
             <TabPanel
-              key={categories[index]}
+              key={index}
               className={`tab-content ${activeTab === index ? "active" : ""}`}
             >
               <div className="mt-8 animate-fadeIn">

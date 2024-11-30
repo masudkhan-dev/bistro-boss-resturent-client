@@ -9,12 +9,14 @@ import {
 } from "firebase/auth";
 import { createContext, useEffect, useState } from "react";
 import auth from "../config/firebase/firebase.config";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const axiosPublic = useAxiosPublic();
 
   const googleProvider = new GoogleAuthProvider();
 
@@ -49,13 +51,29 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser) {
+        axiosPublic
+          .post("/jwt", { email: currentUser.email })
+          .then((res) => {
+            if (res.data.token) {
+              localStorage.setItem("access-token", res.data.token);
+            }
+          })
+          .catch((error) => {
+            console.error("JWT Token Error:", error.message);
+          });
+      } else {
+        localStorage.removeItem("access-token");
+      }
+
       console.log("Current user is ", currentUser);
       setLoading(false);
     });
     return () => {
       return unSubscribe();
     };
-  }, []);
+  }, [axiosPublic]);
 
   const authInfo = {
     user,

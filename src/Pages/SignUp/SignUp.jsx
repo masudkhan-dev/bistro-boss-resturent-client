@@ -19,12 +19,12 @@ import bg from "../../assets/others/authentication.png";
 import bg2 from "../../assets/others/authentication2.png";
 import { Image } from "lucide-react";
 import Alert from "../../Utility/Alert/Alert";
-import useAxiosPublic from "../../hooks/useAxiosPublic";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
-
+  const axiosSecure = useAxiosSecure();
   const { createUserEmail, loading, updateUserProfileEmail, googleSignIn } =
     useAuth();
 
@@ -34,7 +34,6 @@ const SignUp = () => {
     reset,
     formState: { errors },
   } = useForm();
-  const axiosPublic = useAxiosPublic();
 
   const onSubmit = (data) => {
     createUserEmail(data.email, data.password)
@@ -46,7 +45,7 @@ const SignUp = () => {
               email: data.email,
             };
 
-            axiosPublic.post("/users", userInfo).then((res) => {
+            axiosSecure.post("/users", userInfo).then((res) => {
               if (res.data.insertedId) {
                 Alert.fire({
                   type: "success",
@@ -80,7 +79,7 @@ const SignUp = () => {
           name: result.user?.displayName,
         };
         console.log(result.user);
-        axiosPublic.post("/users", userInfo).then((res) => {
+        axiosSecure.post("/users", userInfo).then((res) => {
           console.log(res.data);
           Alert.fire({
             type: "success",

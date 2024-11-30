@@ -34,8 +34,8 @@ const PopularMenu = () => {
         <SectionTitle subHeading="Popular Items" heading="FROM OUR MENU" />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        {data?.map((item) => (
-          <MenuItem key={item?._id} item={item} />
+        {data?.map((item, index) => (
+          <MenuItem key={index} item={item} />
         ))}
       </div>
       <div className="flex justify-center items-center my-8">

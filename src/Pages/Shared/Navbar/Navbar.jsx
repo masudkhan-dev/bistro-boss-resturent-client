@@ -18,11 +18,14 @@ const Navbar = () => {
 
   const navItems = [
     { id: 1, name: "Home", path: "/" },
+    // { id: 7, name: "Ramdomize", path: "/randomize-text" },
+
     { id: 2, name: "Contact Us", path: "/contact" },
     user && { id: 3, name: "Dashboard", path: "/dashboard" },
     { id: 4, name: "Our Menu", path: "/menu" },
     { id: 5, name: "Order Food", path: "/order/salad" },
     { id: 6, name: "Sign Up", path: "/signup" },
+
   ].filter(Boolean);
 
   const variants = {

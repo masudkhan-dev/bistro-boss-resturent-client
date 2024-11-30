@@ -18,8 +18,8 @@ const OrderTab = ({ items }) => {
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {currentItems.map((item) => (
-          <FoodCard key={item._id} item={item} />
+        {currentItems.map((item, index) => (
+          <FoodCard key={index} item={item} />
         ))}
       </div>
 

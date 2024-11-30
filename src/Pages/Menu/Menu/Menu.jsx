@@ -1,22 +1,20 @@
 import { Helmet } from "react-helmet-async";
 import Cover from "../../Shared/Cover/Cover";
+import Error from "../../../Utility/Error/Error";
 import Loader from "../../../Utility/Loader/Loader";
 import MenuCategory from "../MenuCategory/MenuCategory";
 import SectionTitle from "../../../components/SectionTitle/SectionTitle";
+import { useQuery } from "@tanstack/react-query";
 
 import m1 from "../../../assets/menu/banner3.jpg";
 import m2 from "../../../assets/menu/dessert-bg.jpeg";
 import m3 from "../../../assets/menu/pizza-bg.jpg";
 import m4 from "../../../assets/menu/salad-bg.jpg";
 import m5 from "../../../assets/menu/soup-bg.jpg";
-import Error from "../../../Utility/Error/Error";
-import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
-
 
 const Menu = () => {
   const axiosSecure = useAxiosSecure();
-
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["menu"],
     queryFn: async () => {
