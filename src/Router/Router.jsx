@@ -10,6 +10,12 @@ import PrivateRoute from "./PrivateRoute";
 import Dashboard from "../Layout/Dashboard/Dashboard";
 import Cart from "../Pages/Dashboard/Cart/Cart";
 import AllUsers from "../Pages/Dashboard/AllUsers/AllUsers";
+import AddItems from "../Pages/Dashboard/AddItems/AddItems";
+import AdminRoute from "./AdminRoute";
+import ManageItems from "../Pages/Dashboard/ManageItems/ManageItems";
+import UpdateItem from "../Pages/Dashboard/UpdateItem/UpdateItem";
+import axios from "axios";
+import Payment from "../Pages/Dashboard/Payment/Payment";
 
 export const Router = createBrowserRouter([
   {
@@ -50,13 +56,46 @@ export const Router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
+      // user route only
       {
         path: "cart",
         element: <Cart />,
       },
       {
+        path: "payment",
+        element: <Payment />,
+      },
+
+      // admin route only
+      {
         path: "allusers",
-        element: <AllUsers />,
+        element: (
+          <AdminRoute>
+            <AllUsers />,
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "addItems",
+        element: (
+          <AdminRoute>
+            <AddItems />,
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "manageItems",
+        element: (
+          <AdminRoute>
+            <ManageItems />,
+          </AdminRoute>
+        ),
+      },
+      {
+        path: "updateItem/:id",
+        element: <UpdateItem />,
+        loader: async ({ params }) =>
+          fetch(`${import.meta.env.VITE_API_URL}/menu/${params.id}`),
       },
     ],
   },

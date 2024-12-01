@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 const generateCaptcha = (length = 6) => {
   const characters =
@@ -29,12 +30,12 @@ const Captcha = ({
   const handleCaptchaValidation = () => {
     if (captchaInput.toLowerCase() === captcha.toLowerCase()) {
       setIsVerified(true);
-      alert("CAPTCHA verified successfully!");
+      toast.success("CAPTCHA verified successfully!");
       onVerify(true);
     } else {
       setIsVerified(false);
       setCaptchaInput("");
-      alert("Incorrect CAPTCHA. Please try again.");
+      toast.error("Incorrect CAPTCHA. Please try again.");
       onVerify(false);
     }
   };
@@ -85,6 +86,7 @@ const Captcha = ({
           Verify
         </button>
       </div>
+      <Toaster position="top-center" reverseOrder={true} />
     </div>
   );
 };

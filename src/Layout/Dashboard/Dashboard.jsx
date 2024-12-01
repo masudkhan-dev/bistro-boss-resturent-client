@@ -17,8 +17,8 @@ import useAdmin from "../../hooks/useAdmin";
 
 const Dashboard = () => {
   const [cart] = useCart();
-  const { data: isAdmin } = useAdmin();
-  // const isAdmin = true;
+  // const { data: isAdmin } = useAdmin();
+  const isAdmin = true;
 
   console.log(isAdmin);
 
@@ -26,7 +26,7 @@ const Dashboard = () => {
     <div className="flex">
       <div className="w-64 bg-[#D1A054] min-h-full pb-2 ">
         <div className="text-center mb-5">
-          {/* <h2 className="btn btn-sm btn-ghost ">Bistro Boss Resturent</h2> */}
+          <h2 className="btn btn-sm btn-ghost ">Bistro Boss Resturent</h2>
           <p className="text-xl font-bold btn btn-ghost btn-sm">
             {isAdmin ? "Admin Panel" : "Dashboard"}
           </p>
@@ -44,7 +44,7 @@ const Dashboard = () => {
 
               <li>
                 <NavLink
-                  to="/dashboard/reservation"
+                  to="/dashboard/addItems"
                   className="flex items-center"
                 >
                   <Utensils className="w-5 h-5" />
@@ -53,7 +53,7 @@ const Dashboard = () => {
               </li>
 
               <li>
-                <NavLink to="/dashboard/cart" className="flex items-center">
+                <NavLink to="/dashboard/manageItems" className="flex items-center">
                   <List className="w-5 h-5" />
                   Manage Items
                 </NavLink>
@@ -61,7 +61,7 @@ const Dashboard = () => {
 
               <li>
                 <NavLink
-                  to="/dashboard/manageItems"
+                  to="/dashboard/manageBookings"
                   className="flex items-center"
                 >
                   <BookText className="w-5 h-5" />

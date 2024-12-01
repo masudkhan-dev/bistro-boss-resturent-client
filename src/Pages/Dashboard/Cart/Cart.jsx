@@ -3,6 +3,7 @@ import useCart from "../../../hooks/useCart";
 import { Trash2 } from "lucide-react";
 import Alert from "../../../Utility/Alert/Alert";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const [cart, refetch] = useCart();
@@ -47,7 +48,13 @@ const Cart = () => {
       <div className="flex justify-between items-center ">
         <h2 className="text-4xl font-bold">Total Items: {cart.length} </h2>
         <h2 className="text-4xl font-bold">Total Price: ${totalPrice} </h2>
-        <button className="btn btn-primary">Pay</button>
+        {cart.length ? (
+          <Link to="/dashboard/payment">
+            <button className="btn btn-primary">Pay</button>
+          </Link>
+        ) : (
+          <button className="btn btn-disabled">Pay</button>
+        )}
       </div>
 
       <div className="overflow-x-auto mt-5">

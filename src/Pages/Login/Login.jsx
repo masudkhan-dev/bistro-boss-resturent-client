@@ -17,6 +17,7 @@ import useAuth from "../../hooks/useAuth";
 import Alert from "../../Utility/Alert/Alert";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 import Captcha from "../../Utility/Captcha/Captcha";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +33,8 @@ const Login = () => {
   } = useForm();
 
   const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
+
   const from = location.state?.from?.pathname || "/";
 
   const onSubmit = (data) => {
@@ -63,14 +66,14 @@ const Login = () => {
           name: result.user?.displayName,
         };
 
-        axiosPublic.post("/users", userInfo).then((res) => {
+        axiosSecure.post("/users", userInfo).then((res) => {
           console.log(res.data);
+          navigate("/");
           Alert.fire({
             type: "success",
             title: "Login Successful",
             text: "Your account loggedin by Google",
           });
-          navigate("/");
         });
       })
       .catch((error) => {
@@ -123,6 +126,10 @@ const Login = () => {
               )}
             </div>
 
+            <div>
+              <p> </p>
+            </div>
+
             {/* Password Input */}
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3  flex items-center pointer-events-none">
@@ -155,9 +162,7 @@ const Login = () => {
             </div>
 
             {/* Reusable CAPTCHA Component */}
-            <Captcha
-              onVerify={(verified) => setIsVerified(verified)} 
-            />
+            <Captcha onVerify={(verified) => setIsVerified(verified)} />
 
             {/* Login Submit Button */}
             <input
