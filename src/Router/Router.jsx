@@ -16,6 +16,7 @@ import ManageItems from "../Pages/Dashboard/ManageItems/ManageItems";
 import UpdateItem from "../Pages/Dashboard/UpdateItem/UpdateItem";
 import axios from "axios";
 import Payment from "../Pages/Dashboard/Payment/Payment";
+import NotFound from "../Utility/Not Found/NotFound";
 
 export const Router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ export const Router = createBrowserRouter([
         element: <Contact />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
   {
     path: "/login",

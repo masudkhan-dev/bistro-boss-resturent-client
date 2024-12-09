@@ -18,14 +18,10 @@ const Navbar = () => {
 
   const navItems = [
     { id: 1, name: "Home", path: "/" },
-    // { id: 7, name: "Ramdomize", path: "/randomize-text" },
-
-    { id: 2, name: "Contact Us", path: "/contact" },
-    user && { id: 3, name: "Dashboard", path: "/dashboard" },
     { id: 4, name: "Our Menu", path: "/menu" },
     { id: 5, name: "Order Food", path: "/order/salad" },
-    { id: 6, name: "Sign Up", path: "/signup" },
-
+    user && { id: 3, name: "Dashboard", path: "/dashboard" },
+    { id: 2, name: "Contact Us", path: "/contact" },
   ].filter(Boolean);
 
   const variants = {
@@ -140,7 +136,11 @@ const Navbar = () => {
                       <ul className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
                         <li>
                           <Link className="text-sm">
-                            Welcome, <br /> <span className="font-bold"> {user?.displayName}</span>
+                            Welcome, <br />{" "}
+                            <span className="font-bold">
+                              {" "}
+                              {user?.displayName}
+                            </span>
                           </Link>
                         </li>
                         <li>
