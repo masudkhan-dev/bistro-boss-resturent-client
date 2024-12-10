@@ -37,52 +37,66 @@ const Login = () => {
 
   const from = location.state?.from?.pathname || "/";
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (!isVerified) {
       toast.error("Please verify the CAPTCHA first");
       return;
     }
 
-    loginUserEmail(data.email, data.password)
-      .then((result) => {
-        const user = result.user;
+    try {
+      const result = await loginUserEmail(data.email, data.password);
+      const user = result.user;
+
+      // Get JWT token
+      const response = await axiosPublic.post("/jwt", {
+        email: user.email,
+      });
+
+      if (response.data?.token) {
+        localStorage.setItem("access-token", response.data.token);
         toast.success("Logged in Successfully!");
-        console.log(user);
         reset();
         navigate(from, { replace: true });
-      })
-      .catch((error) => {
-        toast.error(error.message);
-        console.error(error.message);
-        navigate("/");
-      });
+      }
+    } catch (error) {
+      toast.error(error.message);
+      console.error("Login error:", error);
+    }
   };
+  const handleGoogleSignIn = async () => {
+    try {
+      const result = await googleSignIn();
+      const userInfo = {
+        email: result.user?.email,
+        name: result.user?.displayName,
+      };
 
-  const handleGoogleSignIn = () => {
-    googleSignIn()
-      .then((result) => {
-        const userInfo = {
-          email: result.user?.email,
-          name: result.user?.displayName,
-        };
-
-        axiosSecure.post("/users", userInfo).then((res) => {
-          console.log(res.data);
-          navigate("/");
-          Alert.fire({
-            type: "success",
-            title: "Login Successful",
-            text: "Your account loggedin by Google",
-          });
-        });
-      })
-      .catch((error) => {
-        Alert.fire({
-          type: "error",
-          title: error.message,
-          text: error.code,
-        });
+      // First get the JWT token
+      const tokenResponse = await axiosPublic.post("/jwt", {
+        email: result.user.email,
       });
+
+      if (tokenResponse.data?.token) {
+        localStorage.setItem("access-token", tokenResponse.data.token);
+
+        // Then create/update user in database
+        await axiosPublic.post("/users", userInfo);
+
+        Alert.fire({
+          type: "success",
+          title: "Login Successful",
+          text: "Your account logged in with Google",
+        });
+
+        navigate(from, { replace: true });
+      }
+    } catch (error) {
+      Alert.fire({
+        type: "error",
+        title: "Login Failed",
+        text: error.message,
+      });
+    }
   };
 
   return (

@@ -1,44 +1,47 @@
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import useAuth from "./useAuth";
+import { useEffect } from "react";
+import axios from "axios";
 
 const useAxiosSecure = () => {
   const navigate = useNavigate();
   const { logOutEmail } = useAuth();
-
   const axiosSecure = axios.create({
-    baseURL: `${import.meta.env.VITE_API_URL}`,
+    baseURL: import.meta.env.VITE_API_URL,
     withCredentials: true,
   });
 
-  axiosSecure.interceptors.request.use(
-    (config) => {
-      const token = localStorage.getItem("access-token");
-      // console.log(token);
-      config.headers.Authorization = token ? `Bearer ${token}` : "";
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
+  useEffect(() => {
+    const requestIntercept = axiosSecure.interceptors.request.use(
+      (config) => {
+        const token = localStorage.getItem("access-token");
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
 
-  axiosSecure.interceptors.response.use(
-    (response) => {
-      return response;
-    },
-    (error) => {
-      const status = error.response?.status;
-      console.log("Error in the interceptors", error);
-
-      if (status === 401 || status === 403) {
-        navigate("/login");
-        logOutEmail();
+    const responseIntercept = axiosSecure.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        if (
+          error?.response?.status === 401 ||
+          error?.response?.status === 403
+        ) {
+          await logOutEmail();
+          navigate("/login");
+        }
+        return Promise.reject(error);
       }
+    );
 
-      return Promise.reject(error);
-    }
-  );
+    return () => {
+      axiosSecure.interceptors.request.eject(requestIntercept);
+      axiosSecure.interceptors.response.eject(responseIntercept);
+    };
+  }, [logOutEmail, navigate]);
 
   return axiosSecure;
 };

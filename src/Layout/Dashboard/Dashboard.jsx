@@ -17,8 +17,8 @@ import useAdmin from "../../hooks/useAdmin";
 
 const Dashboard = () => {
   const [cart] = useCart();
-  // const { data: isAdmin } = useAdmin();
-  const isAdmin = true;
+  const { data: isAdmin } = useAdmin();
+  // const isAdmin = true;
 
   console.log(isAdmin);
 
@@ -36,24 +36,27 @@ const Dashboard = () => {
           {isAdmin ? (
             <>
               <li>
-                <NavLink to="/dashboard/userHome" className="flex items-center">
+                <NavLink
+                  to="/dashboard/adminHome"
+                  className="flex items-center"
+                >
                   <House className="w-5 h-5" />
                   Admin Home
                 </NavLink>
               </li>
 
               <li>
-                <NavLink
-                  to="/dashboard/addItems"
-                  className="flex items-center"
-                >
+                <NavLink to="/dashboard/addItems" className="flex items-center">
                   <Utensils className="w-5 h-5" />
                   Add Items
                 </NavLink>
               </li>
 
               <li>
-                <NavLink to="/dashboard/manageItems" className="flex items-center">
+                <NavLink
+                  to="/dashboard/manageItems"
+                  className="flex items-center"
+                >
                   <List className="w-5 h-5" />
                   Manage Items
                 </NavLink>
@@ -81,17 +84,14 @@ const Dashboard = () => {
               <li>
                 <NavLink to="/dashboard/userHome" className="flex items-center">
                   <House className="w-5 h-5" />
-                  Home
+                  User Home
                 </NavLink>
               </li>
 
               <li>
-                <NavLink
-                  to="/dashboard/reservation"
-                  className="flex items-center"
-                >
+                <NavLink to="/dashboard/history" className="flex items-center">
                   <Calendar1 className="w-5 h-5" />
-                  Reservation
+                  Payment History
                 </NavLink>
               </li>
 
@@ -113,9 +113,12 @@ const Dashboard = () => {
               </li>
 
               <li>
-                <NavLink to="/dashboard/bookings" className="flex items-center">
+                <NavLink
+                  to="/dashboard/paymentHistory"
+                  className="flex items-center"
+                >
                   <BookText className="w-5 h-5" />
-                  My Bookings
+                  Payment Real History
                 </NavLink>
               </li>
             </>

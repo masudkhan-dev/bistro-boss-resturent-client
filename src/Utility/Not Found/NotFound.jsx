@@ -9,12 +9,12 @@ const NotFound = () => {
         initial={{ backgroundSize: "200% 200%" }}
         animate={{
           backgroundSize: ["200% 200%", "400% 400%", "200% 200%"],
-          backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"], // Fulfill animation: smooth transition of position
+          backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
         }}
         transition={{
-          duration: 15, // Increased duration for smoother transition
-          ease: "easeInOut", // Ease function for smoother transition
-          repeat: Infinity, // Infinite loop
+          duration: 15,
+          ease: "easeInOut",
+          repeat: Infinity,
         }}
       >
         <div className="text-center">

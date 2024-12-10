@@ -17,28 +17,33 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const axiosPublic = useAxiosPublic();
-
   const googleProvider = new GoogleAuthProvider();
 
-  // sign in & login using email
   const createUserEmail = (email, password) => {
-    // setLoading(true);
+    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
   const loginUserEmail = (email, password) => {
-    // setLoading(true);
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  // sign in & login using email
   const googleSignIn = () => {
+    setLoading(true);
     return signInWithPopup(auth, googleProvider);
   };
 
-  const logOutEmail = () => {
+  const logOutEmail = async () => {
     setLoading(true);
-    return signOut(auth);
+    try {
+      await signOut(auth);
+      localStorage.removeItem("access-token");
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const updateUserProfileEmail = (name, photo) => {
@@ -49,31 +54,31 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unSubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unSubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      console.log(currentUser);
       setUser(currentUser);
 
-      if (currentUser) {
-        axiosPublic
-          .post("/jwt", { email: currentUser.email })
-          .then((res) => {
-            if (res.data.token) {
-              localStorage.setItem("access-token", res.data.token);
-            }
-          })
-          .catch((error) => {
-            console.error("JWT Token Error:", error.message);
+      if (currentUser?.email) {
+        try {
+          const response = await axiosPublic.post("/jwt", {
+            email: currentUser.email,
           });
+          if (response.data?.token) {
+            localStorage.setItem("access-token", response.data.token);
+          }
+        } catch (error) {
+          console.error("JWT Token Error:", error);
+          await logOutEmail();
+        }
       } else {
         localStorage.removeItem("access-token");
       }
 
-      console.log("Current user is ", currentUser);
       setLoading(false);
     });
-    return () => {
-      return unSubscribe();
-    };
-  }, [axiosPublic]);
+
+    return () => unSubscribe();
+  }, [axiosPublic, logOutEmail]);
 
   const authInfo = {
     user,

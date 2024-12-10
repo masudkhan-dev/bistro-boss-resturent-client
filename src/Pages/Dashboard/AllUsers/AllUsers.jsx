@@ -9,7 +9,7 @@ const AllUsers = () => {
   const axiosSecure = useAxiosSecure();
 
   const { data, isLoading, refetch, isError, error } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["user"],
     queryFn: async () => {
       const token = localStorage.getItem("access-token");
 

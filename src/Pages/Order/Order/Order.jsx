@@ -125,7 +125,7 @@ const Order = () => {
     isError,
     error,
   } = useQuery({
-    queryKey: ["menu"],
+    queryKey: ["menu i"],
     queryFn: async () => {
       const res = await axiosSecure.get("/menu");
       return res.data;

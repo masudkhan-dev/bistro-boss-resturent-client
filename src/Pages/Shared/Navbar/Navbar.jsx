@@ -7,6 +7,7 @@ import Loader from "../../../Utility/Loader/Loader";
 import toast, { Toaster } from "react-hot-toast";
 import { ShoppingCart } from "lucide-react";
 import useCart from "../../../hooks/useCart";
+import useAdmin from "../../../hooks/useAdmin";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,13 +16,15 @@ const Navbar = () => {
   const { user, loading, logOutEmail } = useAuth();
   const navigate = useNavigate();
   const [cart] = useCart();
+  const { data: isAdmin } = useAdmin();
 
   const navItems = [
     { id: 1, name: "Home", path: "/" },
-    { id: 4, name: "Our Menu", path: "/menu" },
-    { id: 5, name: "Order Food", path: "/order/salad" },
-    user && { id: 3, name: "Dashboard", path: "/dashboard" },
-    { id: 2, name: "Contact Us", path: "/contact" },
+    { id: 2, name: "Our Menu", path: "/menu" },
+    { id: 3, name: "Order Food", path: "/order/salad" },
+    user && isAdmin && { id: 4, name: "Dashboard", path: "/dashboard/adminHome" },
+    user && !isAdmin && { id: 5, name: "Dashboard", path: "/dashboard/userHome" },
+    { id: 6, name: "Contact Us", path: "/contact" },
   ].filter(Boolean);
 
   const variants = {
@@ -146,15 +149,6 @@ const Navbar = () => {
                         <li>
                           <Link className="text-sm">Email: {user?.email}</Link>
                         </li>
-                        {/* <li>
-                          <Link className="justify-between">
-                            Profile
-                            <span className="badge">New</span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link>Settings</Link>
-                        </li> */}
 
                         <button
                           onClick={handleLogout}

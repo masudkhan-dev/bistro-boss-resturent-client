@@ -16,7 +16,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 const Menu = () => {
   const axiosSecure = useAxiosSecure();
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["menu"],
+    queryKey: ["menua"],
     queryFn: async () => {
       const res = await axiosSecure.get("/menu");
       return res.data;

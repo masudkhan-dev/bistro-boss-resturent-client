@@ -13,7 +13,7 @@ const ManageItems = () => {
   const axiosSecure = useAxiosSecure();
 
   const { data, refetch, isLoading, isError, error } = useQuery({
-    queryKey: ["manage Item"],
+    queryKey: ["manage"],
     queryFn: async () => {
       const res = await axiosPublic.get("/menu");
       return res.data;

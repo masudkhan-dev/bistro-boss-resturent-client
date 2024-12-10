@@ -16,7 +16,7 @@ const Testimonials = () => {
   const axiosSecure = useAxiosSecure()
   
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["tes tes monial"],
+    queryKey: ["testimonial"],
     queryFn: async () => {
       const res = await axiosSecure.get("/review");
       return res.data;
